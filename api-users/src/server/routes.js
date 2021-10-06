@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const userRepo = require('../repositories/users');
-const emailValidator = require('../helpers/email-validator')
-const verifyUserExistsMiddleware = require('../middlewares/verify-user-exists')
+const emailValidator = require('../helpers/email-validator');
+
 
 module.exports = function (middlewares) {
+
+    router.use(middlewares.authMiddleware);
+
     router.get('/users', async function (req, res) {
         const payload = req.payload();
 
@@ -93,7 +96,7 @@ module.exports = function (middlewares) {
 
     });
 
-    router.get('/users/:userId', verifyUserExistsMiddleware, async (req, res) => {
+    router.get('/users/:userId', middlewares.verifyUserExistsMiddleware, async (req, res) => {
         const payload = req.payload(['user']);
 
         try {
@@ -106,7 +109,7 @@ module.exports = function (middlewares) {
         }
     })
 
-    router.put('/users/:userId', verifyUserExistsMiddleware, async (req, res) => {
+    router.put('/users/:userId', middlewares.verifyUserExistsMiddleware, async (req, res) => {
         const payload = req.payload(['user']);
 
         try {
@@ -190,19 +193,15 @@ module.exports = function (middlewares) {
         }
     })
 
-    router.delete('/users/:userId', verifyUserExistsMiddleware, async (req, res) => {
-        const payload = req.payload(['user']);
-
+    router.delete('/users/:userId', middlewares.verifyUserExistsMiddleware, async (req, res) => {
+        const payload = req.payload();
         try {
             const { userId } = req.params;
 
-            await userRepo.deleteUser(userId, {
-                deletedAt: new Date()
-            });
+            await userRepo.deleteUser(userId);
 
             payload.code = 204;
-            payload.messages = 'Usuário deletado com sucesso';
-
+            
             res.status(payload.code).json(payload);
 
         } catch (error) {

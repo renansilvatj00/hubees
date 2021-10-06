@@ -94,25 +94,18 @@ async function update(userId, fields) {
     })
 }
 
-async function deleteUser(userId, fields) {
-    const active = getParam(fields, 'active', 1)
-    const deletedAt = getParam(fields, 'deletedAt')
-
-    const updateFields = {}
-
-    if (active !== null) updateFields.active = active
-    if (deletedAt !== null) updateFields.deletedAt = deletedAt
+async function deleteUser(userId) {
 
     const db = await database.connect()
     await db.collection('users').updateOne({
         _id: ObjectId(userId)
     }, {
-        $set: updateFields
+        $set: {
+            deletedAt: new Date()
+        }
     })
 
-    return getOne(userId, {
-        active
-    })
+    return true
 }
 
 module.exports = {

@@ -1,13 +1,19 @@
 const axios = require('axios')
 
-async function auth (authorization) {
-  try {
-    return (await axios.post(`${process.env.API_AUTH_HOST}/auth`, {
-      authorization
-    })).data.content.auth
-  } catch (error) {
-    return null
-  }
+function auth(authorization) {
+  return new Promise(function (resolve, reject) {
+    axios.post(process.env.AUTH_API_HOST, {}, {
+      headers: {
+        Authorization: authorization
+      }
+    })
+      .then(function (response) {
+        resolve(response.data.data.user);
+      })
+      .catch(function (error) {
+        reject(null)
+      })
+  })
 }
 
 module.exports = {

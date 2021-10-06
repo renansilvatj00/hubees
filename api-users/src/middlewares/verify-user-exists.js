@@ -2,7 +2,7 @@ const UserRepository = require('../repositories/users');
 
 module.exports = async (req, res, next) => {
 
-  const payload = req.payload(['user']);
+  const payload = req.payload();
 
   const { userId } = req.params;
   const user = await UserRepository.getOne(userId);
