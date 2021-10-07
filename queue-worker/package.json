@@ -1,0 +1,15 @@
+{
+  "name": "queue-worker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Renan Silva <renan.silva.tj@gmail.com> (http://github.com/renansilvatj00)",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.8.0"
+  }
+}

@@ -2,7 +2,7 @@ const axios = require('axios')
 
 function auth(authorization) {
   return new Promise(function (resolve, reject) {
-    axios.post(process.env.AUTH_API_HOST, {}, {
+    axios.post(`${process.env.AUTH_API_HOST}auth`, {}, {
       headers: {
         Authorization: authorization
       }

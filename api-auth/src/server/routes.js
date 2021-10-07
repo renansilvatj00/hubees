@@ -5,7 +5,7 @@ const users = require('../repositories/users');
 const bcrypt = require('bcrypt');
 
 module.exports = function (middlewares) {
-    router.post('/', async function (req, res) {
+    router.post('/auth', async function (req, res) {
         const payload = req.payload(['authorization']);
 
         try {

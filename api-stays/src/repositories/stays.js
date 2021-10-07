@@ -1,7 +1,7 @@
 const database = require('../config/database');
 const getParam = require('../helpers/get-param');
 const ObjectId = require('mongodb').ObjectId
-const bcrypt = require('bcrypt');
+const { addQueue } = require('../helpers/gateway')
 
 async function getAll(userId) {
     const db = await database.connect();
@@ -150,10 +150,10 @@ async function pay(userId, stayId, paidAtTimestamp) {
         }
     })
 
-    // await addQueue('stay-pay', {
-    //   userId,
-    //   stayId
-    // })
+    await addQueue('stay-pay', {
+      userId,
+      stayId
+    })
 
     return getOne(userId, stayId)
 }
