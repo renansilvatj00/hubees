@@ -88,15 +88,14 @@ async function close(userId, stayId, closedAtTimestamp) {
     return getOne(userId, stayId)
 }
 
-async function update(userId, stayId, newEntryTime, newOutTime) {
+async function update(userId, stayId, newEntryTime) {
     const db = await database.connect()
     await db.collection('userStays').updateOne({
         user: ObjectId(userId),
         _id: ObjectId(stayId)
     }, {
         $set: {
-            openedAt: new Date(newEntryTime),
-            closedAr: new Date(newOutTime)
+            openedAt: new Date(newEntryTime)
         }
     })
 

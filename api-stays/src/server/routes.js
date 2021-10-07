@@ -48,7 +48,7 @@ module.exports = function (middlewares) {
                 payload.error = true
                 payload.form.openedAtTimestamp.error = true;
                 payload.form.openedAtTimestamp.messages = 'Timestamp não pode ser uma data no futuro';
-            } 
+            }
 
             if (payload.error) {
                 payload.code = 400;
@@ -182,7 +182,7 @@ module.exports = function (middlewares) {
 
     router.put('/stays/:userId/update', async (req, res) => {
 
-        const payload = req.payload(['newEntryTime', 'newOutTime']);
+        const payload = req.payload(['newEntryTime']);
 
         try {
             const { userId } = req.params;
@@ -194,7 +194,7 @@ module.exports = function (middlewares) {
                 throw new Error('Este usuário não tem estadia aberta');
             }
 
-            const { newEntryTime, newOutTime } = req.body;
+            const { newEntryTime } = req.body;
 
             if (!newEntryTime) {
                 payload.error = true;
@@ -206,29 +206,13 @@ module.exports = function (middlewares) {
                 payload.form.newEntryTime.messages = 'Timestamp inválido';
             }
 
-            if (!newOutTime) {
-                payload.error = true;
-                payload.form.newOutTime.error = true;
-                payload.form.newOutTime.messages = 'Campo obrigatório';
-            } else if (!timeStampValidator.isValidTimestamp(newOutTime)) {
-                payload.error = true
-                payload.form.newOutTime.error = true;
-                payload.form.newOutTime.messages = 'Timestamp inválido';
-            }
-
-            if (timeStampValidator.verifyNewDates(newEntryTime, newOutTime)) {
-                payload.error = true
-                payload.form.newEntryTime.error = true;
-                payload.form.newOutTime.error = true;
-                payload.form.messages = 'Data de saída não pode ser menor que a data de entrada';
-            }
 
             if (payload.error) {
                 payload.code = 400;
                 throw new Error('Verifique todos os campos');
             }
 
-            const stay = await StayRepository.update(userId, openedStays[0]._id, newEntryTime, newOutTime);
+            const stay = await StayRepository.update(userId, openedStays[0]._id, newEntryTime);
 
             payload.messages = 'Estadia atualizada com sucesso';
 

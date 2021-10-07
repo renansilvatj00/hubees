@@ -12,15 +12,8 @@ function isfutureDate(target) {
     return target > now;
 }
 
-function verifyNewDates(newEntryTime, newOutDate) {
-
-    return newOutDate < newEntryTime;
-}
-  
-  module.exports = {
+module.exports = {
     isValidTimestamp,
     isNumeric,
-    isfutureDate,
-    verifyNewDates
-  }
-  
+    isfutureDate
+}
