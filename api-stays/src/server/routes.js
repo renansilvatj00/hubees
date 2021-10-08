@@ -8,49 +8,52 @@ module.exports = function (middlewares) {
     router.use(middlewares.authMiddleware);
 
     router.get('/stays/:userId', async (req, res) => {
-
         const payload = req.payload();
+
         try {
             const { userId } = req.params;
+
             const stays = await StayRepository.getAll(userId);
             payload.data.stays = stays;
 
             if (!stays.length) {
-                payload.code = 200;
-                throw new Error('Este usuário não possui estadias.');
+                payload.msg = 'Este usuário não possui estadias.';
             }
 
             res.status(payload.code).json(payload);
         } catch (error) {
-            payload.message = error.message;
+            payload.msg = error.message;
             payload.success = false;
             res.status(payload.code).json(payload);
         }
     })
 
     router.post('/stays/:userId', async (req, res) => {
-
         const payload = req.payload(['openedAtTimestamp']);
 
         try {
             const { userId } = req.params;
-            const { openedAtTimestamp } = req.body;
+            const openedAtTimestamp = Number(req.body.openedAtTimestamp);
 
             if (!openedAtTimestamp) {
-                payload.error = true;
+                payload.success = false;
                 payload.form.openedAtTimestamp.error = true;
-                payload.form.openedAtTimestamp.messages = 'Campo obrigatório';
+                payload.form.openedAtTimestamp.msg = 'Campo obrigatório';
             } else if (!timeStampValidator.isValidTimestamp(openedAtTimestamp)) {
-                payload.error = true;
+                payload.success = false;
                 payload.form.openedAtTimestamp.error = true;
-                payload.form.openedAtTimestamp.messages = 'Timestamp inválido';
-            } else if (timeStampValidator.isfutureDate(openedAtTimestamp)) {
-                payload.error = true
+                payload.form.openedAtTimestamp.msg = 'Timestamp inválido';
+            } else if (timeStampValidator.isPastDate(openedAtTimestamp)) {
+                payload.success = false;
                 payload.form.openedAtTimestamp.error = true;
-                payload.form.openedAtTimestamp.messages = 'Timestamp não pode ser uma data no futuro';
+                payload.form.openedAtTimestamp.msg = 'Timestamp não pode ser anterior à 01/01/2021';
+            } else if (timeStampValidator.isFutureDate(openedAtTimestamp)) {
+                payload.success = false
+                payload.form.openedAtTimestamp.error = true;
+                payload.form.openedAtTimestamp.msg = 'Timestamp não pode ser uma data no futuro';
             }
 
-            if (payload.error) {
+            if (!payload.success) {
                 payload.code = 400;
                 throw new Error('Verifique todos os campos');
             }
@@ -72,18 +75,17 @@ module.exports = function (middlewares) {
 
             payload.code = 201;
             payload.data.stay = stay;
-            payload.messages = 'Estadia inserida com sucesso';
+            payload.msg = 'Estadia inserida com sucesso';
 
             res.status(payload.code).json(payload);
         } catch (error) {
-            payload.message = error.message;
+            payload.msg = error.message;
             payload.success = false;
             res.status(payload.code).json(payload);
         }
     })
 
-    router.get('/stays/:userId/situationStays', async (req, res) => {
-
+    router.get('/stays/:userId/stay', async (req, res) => {
         const payload = req.payload();
 
         try {
@@ -96,17 +98,14 @@ module.exports = function (middlewares) {
 
             if (openedStays.length) {
                 stay = openedStays[0];
-                stay.status = 'Aberto';
             }
 
             if (closedStays.length) {
                 stay = closedStays[0];
-                stay.status = 'Fechado e não pago';
             }
 
             if (paidStays.length) {
                 stay = paidStays[0];
-                stay.status = 'Pago mas não confirmado';
             }
 
             if (!stay) {
@@ -117,14 +116,13 @@ module.exports = function (middlewares) {
             payload.data.stay = stay;
             res.status(payload.code).json(payload);
         } catch (error) {
-            payload.message = error.message;
+            payload.msg = error.message;
             payload.success = false;
             res.status(payload.code).json(payload);
         }
     })
 
     router.put('/stays/:userId/close', async (req, res) => {
-
         const payload = req.payload(['closedAtTimestamp']);
 
         try {
@@ -137,44 +135,48 @@ module.exports = function (middlewares) {
                 throw new Error('Este usuário não tem estadia aberta');
             }
 
-            const { closedAtTimestamp } = req.body;
+            const closedAtTimestamp = Number(req.body.closedAtTimestamp);
 
             if (!closedAtTimestamp) {
-                payload.error = true;
+                payload.success = false;
                 payload.form.closedAtTimestamp.error = true;
-                payload.form.closedAtTimestamp.messages = 'Campo obrigatório';
+                payload.form.closedAtTimestamp.msg = 'Campo obrigatório';
             } else if (!timeStampValidator.isValidTimestamp(closedAtTimestamp)) {
-                payload.error = true
+                payload.success = false
                 payload.form.closedAtTimestamp.error = true;
-                payload.form.closedAtTimestamp.messages = 'Timestamp inválido';
-            } else if (timeStampValidator.isfutureDate(closedAtTimestamp)) {
-                payload.error = true;
+                payload.form.closedAtTimestamp.msg = 'Timestamp inválido';
+            } else if (timeStampValidator.isPastDate(closedAtTimestamp)) {
+                payload.success = false;
+                payload.form.openedAtTimestamp.error = true;
+                payload.form.openedAtTimestamp.msg = 'Timestamp não pode ser anterior à 01/01/2021';
+            } else if (timeStampValidator.isFutureDate(closedAtTimestamp)) {
+                payload.success = false;
                 payload.form.closedAtTimestamp.error = true;
-                payload.form.closedAtTimestamp.messages = 'Timestamp não pode ser uma data no futuro';
+                payload.form.closedAtTimestamp.msg = 'Timestamp não pode ser uma data no futuro';
             } else {
                 const openedAtTimestamp = new Date(openedStays[0].openedAt).getTime();
 
                 if (openedAtTimestamp >= closedAtTimestamp) {
-                    payload.error = true;
+                    payload.success = false;
                     payload.form.closedAtTimestamp.error = true;
-                    payload.form.closedAtTimestamp.messages = 'Timestamp de fechamento não pode ser menor ou igual que o timestamp de abertura';
+                    payload.form.closedAtTimestamp.msg = 'Timestamp de fechamento não pode ser menor ou igual que o timestamp de abertura';
                 }
             }
 
-            if (payload.error) {
+            if (!payload.success) {
                 payload.code = 400;
                 throw new Error('Verifique todos os campos');
             }
 
             const stay = await StayRepository.close(userId, openedStays[0]._id, closedAtTimestamp);
 
-            payload.messages = 'Estadia fechada com sucesso';
+            payload.msg = 'Estadia fechada com sucesso';
 
             payload.data.stay = stay;
 
             res.status(payload.code).json(payload);
         } catch (error) {
-            payload.message = error.message;
+            payload.msg = error.message;
             payload.success = false;
             res.status(payload.code).json(payload);
         }
@@ -197,30 +199,30 @@ module.exports = function (middlewares) {
             const { newEntryTime } = req.body;
 
             if (!newEntryTime) {
-                payload.error = true;
+                payload.success = true;
                 payload.form.newEntryTime.error = true;
-                payload.form.newEntryTime.messages = 'Campo obrigatório';
+                payload.form.newEntryTime.msg = 'Campo obrigatório';
             } else if (!timeStampValidator.isValidTimestamp(newEntryTime)) {
-                payload.error = true
+                payload.success = true
                 payload.form.newEntryTime.error = true;
-                payload.form.newEntryTime.messages = 'Timestamp inválido';
+                payload.form.newEntryTime.msg = 'Timestamp inválido';
             }
 
 
-            if (payload.error) {
+            if (payload.success) {
                 payload.code = 400;
                 throw new Error('Verifique todos os campos');
             }
 
             const stay = await StayRepository.update(userId, openedStays[0]._id, newEntryTime);
 
-            payload.messages = 'Estadia atualizada com sucesso';
+            payload.msg = 'Estadia atualizada com sucesso';
 
             payload.data.stay = stay;
 
             res.status(payload.code).json(payload);
         } catch (error) {
-            payload.message = error.message;
+            payload.msg = error.message;
             payload.success = false;
             res.status(payload.code).json(payload);
         }
@@ -243,41 +245,66 @@ module.exports = function (middlewares) {
             const { paidAtTimestamp } = req.body;
 
             if (!paidAtTimestamp) {
-                payload.error = true
+                payload.success = false;
                 payload.form.paidAtTimestamp.error = true
-                payload.form.paidAtTimestamp.messages = 'Campo obrigatório';
+                payload.form.paidAtTimestamp.msg = 'Campo obrigatório';
             } else if (!timeStampValidator.isValidTimestamp(paidAtTimestamp)) {
-                payload.error = true
+                payload.success = false;
                 payload.form.paidAtTimestamp.error = true
-                payload.form.paidAtTimestamp.messages = 'Timestamp inválido';
-            } else if (timeStampValidator.isfutureDate(paidAtTimestamp)) {
-                payload.error = true
+                payload.form.paidAtTimestamp.msg = 'Timestamp inválido';
+            } else if (timeStampValidator.isPastDate(paidAtTimestamp)) {
+                payload.success = false;
+                payload.form.openedAtTimestamp.error = true;
+                payload.form.openedAtTimestamp.msg = 'Timestamp não pode ser anterior à 01/01/2021';
+            } else if (timeStampValidator.isFutureDate(paidAtTimestamp)) {
+                payload.success = false;
                 payload.form.paidAtTimestamp.error = true
-                payload.form.paidAtTimestamp.messages = 'Timestamp não pode ser uma data no futuro';
+                payload.form.paidAtTimestamp.msg = 'Timestamp não pode ser uma data no futuro';
             } else {
                 const closedAtTimestamp = new Date(closedStays[0].closedAt).getTime()
 
                 if (closedAtTimestamp >= paidAtTimestamp) {
-                    payload.error = true
+                    payload.success = false;
                     payload.form.paidAtTimestamp.error = true
-                    payload.form.paidAtTimestamp.messages = 'Timestamp de fechamento não pode ser menor ou igual que o timestamp de abertura';
+                    payload.form.paidAtTimestamp.msg = 'Timestamp de fechamento não pode ser menor ou igual que o timestamp de abertura';
                 }
             }
 
-            if (payload.error) {
+            if (!payload.success) {
                 payload.code = 400
                 throw new Error('Verifique todos os campos')
             }
 
             const stay = await StayRepository.pay(userId, closedStays[0]._id, paidAtTimestamp)
 
-            payload.messages = 'Estadia paga com sucesso';
+            payload.msg = 'Estadia paga com sucesso';
 
             payload.data.stay = stay;
 
             res.status(payload.code).json(payload)
         } catch (error) {
-            payload.message = error.message;
+            payload.msg = error.message;
+            payload.success = false;
+            res.status(payload.code).json(payload);
+        }
+    })
+
+    router.put('/stays/:userId/confirmPayment/:stayId', async (req, res) => {
+
+        const payload = req.payload();
+
+        try {
+            const { userId, stayId } = req.params;
+
+            const stay = await StayRepository.confirmPayment(userId, stayId)
+
+            payload.msg = 'Pagamento confirmado com sucesso';
+
+            payload.data.stay = stay;
+
+            res.status(payload.code).json(payload)
+        } catch (error) {
+            payload.msg = error.message;
             payload.success = false;
             res.status(payload.code).json(payload);
         }
