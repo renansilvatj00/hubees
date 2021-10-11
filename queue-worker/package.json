@@ -10,6 +10,8 @@
   "author": "Renan Silva <renan.silva.tj@gmail.com> (http://github.com/renansilvatj00)",
   "license": "ISC",
   "dependencies": {
-    "amqplib": "^0.8.0"
+    "amqplib": "^0.8.0",
+    "axios": "^0.22.0",
+    "dotenv-safe": "^8.2.0"
   }
 }

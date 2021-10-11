@@ -1,4 +1,7 @@
-console.clear()
+console.clear();
+
+require('dotenv-safe').config();
+const axios = require('axios');
 
 const opt = { credentials: require('amqplib').credentials.plain('rabbitmq', 'rabbitmq') };
 
@@ -20,10 +23,25 @@ amqp.connect('amqp://localhost', opt, function (error0, connection) {
     });
 
     console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
-    channel.consume(queue, function (msg) {
+    channel.consume(queue, async function (msg) {
       const content = msg.content.toString();
       const jsonContent = JSON.parse(content);
+      const { userId, stayId } = jsonContent;
       console.log(" [x] Received %s", jsonContent);
+
+      try {
+        await axios.put(`${process.env.STAYS_API_HOST}stays/${userId}/confirmPayment/${stayId}/`, {}, {
+          headers: {
+            Authorization: 'Basic YUBhOjEyMzQ1Ng=='
+          }
+        })
+      } catch (error) {
+        console.log(error.message)
+      }
+
+
+
+
     }, {
       noAck: true
     });

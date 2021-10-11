@@ -14,8 +14,6 @@ function isFutureDate(target) {
 
 function isPastDate(target) {
     const past = new Date("2021-01-01 00:00:00").getTime();
-    console.log('past',past)
-    console.log('target',target)
     return target < past;
 }
 

@@ -57,9 +57,7 @@ module.exports = function (middlewares) {
                 payload.form.email.messages = 'E-mail inválido';
             } else {
                 const existedUser = await userRepo.getOneByEmail(email);
-                console.log(existedUser)
                 if (existedUser) {
-                    console.log('entrou aqui')
                     payload.error = true;
                     payload.form.email.error = true;
                     payload.form.email.messages = 'Já existe um usuário com este e-mail';

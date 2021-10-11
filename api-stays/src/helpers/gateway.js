@@ -16,24 +16,23 @@ function auth(authorization) {
       })
   })
 }
+
 function getUser(userId, authorization) {
-  console.log('authorization', authorization)
   return new Promise(function (resolve, reject) {
-    axios.get(`${process.env.USERS_API_HOST}users/${userId}`, {}, {
+    axios.get(`${process.env.USERS_API_HOST}users/${userId}`, {
       headers: {
         Authorization: authorization
       }
     })
       .then(function (response) {
-        console.log(response)
         resolve(response.data.data.user);
       })
       .catch(function (error) {
-        console.log('error', error.response)
-        reject(null)
+        resolve(null)
       })
   })
 }
+
 async function addQueue(queue, message) {
   return new Promise((resolve, reject) => {
     const opt = { credentials: require('amqplib').credentials.plain('rabbitmq', 'rabbitmq') }

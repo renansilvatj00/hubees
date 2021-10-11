@@ -7,7 +7,7 @@ module.exports = function (middlewares) {
 
     router.use(middlewares.authMiddleware);
 
-    router.get('/stays/:userId', async (req, res) => {
+    router.get('/stays/:userId', middlewares.verifyUserExistsMiddleware, async (req, res) => {
         const payload = req.payload();
 
         try {
@@ -28,7 +28,7 @@ module.exports = function (middlewares) {
         }
     })
 
-    router.post('/stays/:userId', async (req, res) => {
+    router.post('/stays/:userId', middlewares.verifyUserExistsMiddleware, async (req, res) => {
         const payload = req.payload(['openedAtTimestamp']);
 
         try {
@@ -85,7 +85,7 @@ module.exports = function (middlewares) {
         }
     })
 
-    router.get('/stays/:userId/stay', async (req, res) => {
+    router.get('/stays/:userId/stay', middlewares.verifyUserExistsMiddleware, async (req, res) => {
         const payload = req.payload();
 
         try {
@@ -122,7 +122,7 @@ module.exports = function (middlewares) {
         }
     })
 
-    router.put('/stays/:userId/close', async (req, res) => {
+    router.put('/stays/:userId/close', middlewares.verifyUserExistsMiddleware, async (req, res) => {
         const payload = req.payload(['closedAtTimestamp']);
 
         try {
@@ -182,7 +182,7 @@ module.exports = function (middlewares) {
         }
     })
 
-    router.put('/stays/:userId/update', async (req, res) => {
+    router.put('/stays/:userId/update', middlewares.verifyUserExistsMiddleware, async (req, res) => {
 
         const payload = req.payload(['newEntryTime']);
 
@@ -228,7 +228,7 @@ module.exports = function (middlewares) {
         }
     })
 
-    router.put('/stays/:userId/pay', async (req, res) => {
+    router.put('/stays/:userId/pay', middlewares.verifyUserExistsMiddleware, async (req, res) => {
 
         const payload = req.payload(['paidAtTimestamp']);
 
@@ -289,7 +289,7 @@ module.exports = function (middlewares) {
         }
     })
 
-    router.put('/stays/:userId/confirmPayment/:stayId', async (req, res) => {
+    router.put('/stays/:userId/confirmPayment/:stayId', middlewares.verifyUserExistsMiddleware, async (req, res) => {
 
         const payload = req.payload();
 
