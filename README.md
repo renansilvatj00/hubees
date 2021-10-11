@@ -23,7 +23,7 @@ docker-compose up -d
 ```sh
 cd api-auth/
 cp .env.example .env
-npm ci
+npm install
 node index.js
 ```
 
@@ -32,7 +32,7 @@ node index.js
 ```sh
 cd api-users/
 cp .env.example .env
-npm ci
+npm install
 node migration.js
 node index.js
 ```
@@ -42,7 +42,7 @@ node index.js
 ```sh
 cd api-stays/
 cp .env.example .env
-npm ci
+npm install
 node index.js
 ```
 
@@ -50,7 +50,8 @@ node index.js
 
 ```sh
 cd queue-worker/
-npm ci
+cp .env.example .env
+npm install
 node receive.js
 ```
 
@@ -67,7 +68,7 @@ As apis de usuários e estadias consomem a api de autenticação.
 A api de estadias também consome a api de usuários
 
 A api de autenticação possui apenas uma rota:
-- `POST /auth` - Recebe as credenciais do usuário e retorna os dados dele
+- `POST /auth` - Recebe as credenciais (email e passwaord) do usuário e retorna os dados dele 
 
 A api de usuários possui as seguintes rotas:
 - `GET /users` - Lista todos os usuários ativos
