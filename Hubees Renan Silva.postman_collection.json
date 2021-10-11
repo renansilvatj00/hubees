@@ -1,0 +1,602 @@
+{
+	"info": {
+		"_postman_id": "7952792d-9537-4bef-bb7e-99bb1c4bef9f",
+		"name": "Hubees Renan Silva",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "api-auth",
+			"item": [
+				{
+					"name": "Auth",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "usuario1@hubees.com",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{API_AUTH_HOST}}/auth",
+							"host": [
+								"{{API_AUTH_HOST}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "api-users",
+			"item": [
+				{
+					"name": "Listar Usuarios",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "usuario1@hubees.com",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{API_USERS_HOST}}/users?active=1",
+							"host": [
+								"{{API_USERS_HOST}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "active",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Inserir Usuário",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "usuario1@hubees.com",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"Usuário 4\",\n\t\"email\":\"usuario4@email.com\",\n\t\"password\":\"abcd123\"\n}"
+						},
+						"url": {
+							"raw": "{{API_USERS_HOST}}/users",
+							"host": [
+								"{{API_USERS_HOST}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Busca Usuário",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "usuario1@hubees.com",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{API_USERS_HOST}}/users/616470a7443f97bdcf6ac16c",
+							"host": [
+								"{{API_USERS_HOST}}"
+							],
+							"path": [
+								"users",
+								"616470a7443f97bdcf6ac16c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Editar Usuário",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "usuario1@hubees.com",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"Usuário 5\"\n}"
+						},
+						"url": {
+							"raw": "{{API_USERS_HOST}}/users/616470a7443f97bdcf6ac16c",
+							"host": [
+								"{{API_USERS_HOST}}"
+							],
+							"path": [
+								"users",
+								"616470a7443f97bdcf6ac16c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Inativar Usuário",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "usuario1@hubees.com",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_USERS_HOST}}/users/616470a2443f97bdcf6ac16b/active/0",
+							"host": [
+								"{{API_USERS_HOST}}"
+							],
+							"path": [
+								"users",
+								"616470a2443f97bdcf6ac16b",
+								"active",
+								"0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deletar Usuário",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "usuario1@hubees.com",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_USERS_HOST}}/users/616470a7443f97bdcf6ac16c",
+							"host": [
+								"{{API_USERS_HOST}}"
+							],
+							"path": [
+								"users",
+								"616470a7443f97bdcf6ac16c"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "api-stays",
+			"item": [
+				{
+					"name": "Listar estadias de um Usuário",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "usuario1@hubees.com",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{API_STAYS_HOST}}/stays/61646cfd10b10d1aa6d9f1c9",
+							"host": [
+								"{{API_STAYS_HOST}}"
+							],
+							"path": [
+								"stays",
+								"61646cfd10b10d1aa6d9f1c9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Inserir estadia para um Usuário",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "usuario1@hubees.com",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"openedAtTimestamp\":1633699057195\n}"
+						},
+						"url": {
+							"raw": "{{API_STAYS_HOST}}/stays/61646cfd10b10d1aa6d9f1c9",
+							"host": [
+								"{{API_STAYS_HOST}}"
+							],
+							"path": [
+								"stays",
+								"61646cfd10b10d1aa6d9f1c9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ver estadia pendente de um Usuário",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "usuario1@hubees.com",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic YUBhOjEyMzQ1Ng=="
+							}
+						],
+						"url": {
+							"raw": "{{API_STAYS_HOST}}/stays/61646cfd10b10d1aa6d9f1c9/stay",
+							"host": [
+								"{{API_STAYS_HOST}}"
+							],
+							"path": [
+								"stays",
+								"61646cfd10b10d1aa6d9f1c9",
+								"stay"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar estadia de um Usuário",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "usuario1@hubees.com",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"newEntryTime\":\"2021-10-02 06:00:00\"\n}"
+						},
+						"url": {
+							"raw": "{{API_STAYS_HOST}}/stays/61646cfd10b10d1aa6d9f1c9/update",
+							"host": [
+								"{{API_STAYS_HOST}}"
+							],
+							"path": [
+								"stays",
+								"61646cfd10b10d1aa6d9f1c9",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fechar estadia de um Usuário",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "usuario1@hubees.com",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"closedAtTimestamp\":1633700291796\n}"
+						},
+						"url": {
+							"raw": "{{API_STAYS_HOST}}/stays/61646cfd10b10d1aa6d9f1c9/close",
+							"host": [
+								"{{API_STAYS_HOST}}"
+							],
+							"path": [
+								"stays",
+								"61646cfd10b10d1aa6d9f1c9",
+								"close"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Pagar estadia de um Usuário",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "usuario1@hubees.com",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"paidAtTimestamp\":1633700630183\n}"
+						},
+						"url": {
+							"raw": "{{API_STAYS_HOST}}/stays/61646cfd10b10d1aa6d9f1c9/pay",
+							"host": [
+								"{{API_STAYS_HOST}}"
+							],
+							"path": [
+								"stays",
+								"61646cfd10b10d1aa6d9f1c9",
+								"pay"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirma pagamento de estadia",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "usuario1@hubees.com",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{API_STAYS_HOST}}/stays/61646cfd10b10d1aa6d9f1c9/confirmPayment/6164772ec5ea38e0763e64f0",
+							"host": [
+								"{{API_STAYS_HOST}}"
+							],
+							"path": [
+								"stays",
+								"61646cfd10b10d1aa6d9f1c9",
+								"confirmPayment",
+								"6164772ec5ea38e0763e64f0"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

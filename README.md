@@ -22,7 +22,7 @@ docker-compose up -d
 
 ```sh
 cd api-auth/
-cp .env-example .env
+cp .env.example .env
 npm ci
 node index.js
 ```
@@ -31,8 +31,9 @@ node index.js
 
 ```sh
 cd api-users/
-cp .env-example .env
+cp .env.example .env
 npm ci
+node migration.js
 node index.js
 ```
 
@@ -40,7 +41,7 @@ node index.js
 
 ```sh
 cd api-stays/
-cp .env-example .env
+cp .env.example .env
 npm ci
 node index.js
 ```
@@ -79,8 +80,10 @@ A api de usuários possui as seguintes rotas:
 A api de estadias possui as seguintes rotas:
 - `GET /stays/:userId` - Lista todas as estadias de um usuário
 - `POST /stays/:userId` - Abre uma nova estadia para um usuário
-- `GET /stays/:userId/show` - Exibe a estadia aberta (se houver uma) do usuário
+- `GET /stays/:userId/stay` - Exibe a estadia aberta (se houver uma) do usuário
+- `GET /stays/:userId/update` - Edita a data de entrada de uma estadia aberta (se houver uma) do usuário
 - `PUT /stays/:userId/close` - Atualiza o status da estadia para "Fechado e não pago"
 - `PUT /stays/:userId/pay` - Atualiza o status da estadia para "Pago mas não confirmado"
+- `PUT /stays/:userId/confirmPayment/:stayId` - Confirma o pagamento da estadia
 
 O Bot de confirmação de pagamento ficará ouvindo a fila de estadias com pagamento não confirmado. Sempre que chegar um item na fila, ele completa a transação e finaliza a estadia.

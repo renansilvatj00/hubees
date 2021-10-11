@@ -1,15 +1,15 @@
 const MongoClient = require('mongodb').MongoClient;
-const { MongoMemoryServer } = require('mongodb-memory-server');
+// const { MongoMemoryServer } = require('mongodb-memory-server');
 let client = null;
 
 async function connect () {
   let uri = process.env.MONGO_CONNECTION;
 
   if (!client) {
-    if (process.env.NODE_ENV === 'test') {
-      const mongod = await MongoMemoryServer.create();
-      uri = await mongod.getUri();
-    }
+    // if (process.env.NODE_ENV === 'test') {
+    //   const mongod = await MongoMemoryServer.create();
+    //   uri = await mongod.getUri();
+    // }
 
     client = new MongoClient(uri);
   }

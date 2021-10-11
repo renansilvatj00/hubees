@@ -8,6 +8,7 @@ function isNumeric(n) {
 }
 
 function isFutureDate(target) {
+    target = new Date(target).getTime()
     const now = new Date().getTime();
     return target > now;
 }

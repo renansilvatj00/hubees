@@ -30,7 +30,7 @@ module.exports = function (middlewares) {
 
     });
 
-    router.post('/user', async function (req, res) {
+    router.post('/users', async function (req, res) {
         const payload = req.payload(['name', 'email', 'password']);
 
         try {
@@ -38,56 +38,56 @@ module.exports = function (middlewares) {
             const { name, email, password } = req.body;
 
             if (!name) {
-                payload.error = true;
+                payload.success = false;
                 payload.form.name.error = true;
-                payload.form.name.messages = 'Campo obrigatório';
+                payload.form.name.msg = 'Campo obrigatório';
             } else if (name.length < 3 || name.length > 255) {
-                payload.error = true;
+                payload.success = false;
                 payload.form.name.error = true;
-                payload.form.name.messages = 'O nome precisa ter de 3 a 255 caracteres';
+                payload.form.name.msg = 'O nome precisa ter de 3 a 255 caracteres';
             }
 
             if (!email) {
-                payload.error = true;
+                payload.success = false;
                 payload.form.email.error = true;
-                payload.form.email.messages = 'Campo obrigatório';
+                payload.form.email.msg = 'Campo obrigatório';
             } else if (!emailValidator.isEmailValid(email)) {
-                payload.error = true;
+                payload.success = false;
                 payload.form.email.error = true;
-                payload.form.email.messages = 'E-mail inválido';
+                payload.form.email.msg = 'E-mail inválido';
             } else {
                 const existedUser = await userRepo.getOneByEmail(email);
                 if (existedUser) {
-                    payload.error = true;
+                    payload.success = false;
                     payload.form.email.error = true;
-                    payload.form.email.messages = 'Já existe um usuário com este e-mail';
+                    payload.form.email.msg = 'Já existe um usuário com este e-mail';
                 }
             }
 
             if (!password) {
-                payload.error = true;
+                payload.success = false;
                 payload.form.password.error = true;
-                payload.form.password.messages = 'Campo obrigatório';
+                payload.form.password.msg = 'Campo obrigatório';
             } else if (password.length < 6 || password.length > 12) {
-                payload.error = true;
+                payload.success = false;
                 payload.form.password.error = true;
-                payload.form.password.messages = 'A senha precisa ter de 6 a 12 caracteres';
+                payload.form.password.msg = 'A senha precisa ter de 6 a 12 caracteres';
             }
 
-            if (payload.error) {
+            if (!payload.success) {
                 payload.code = 400;
                 throw new Error('Verifique todos os campos');
             }
 
             const user = await userRepo.create({ name, email, password });
+            payload.data.user = user;
 
             payload.code = 201;
-            payload.data.user = user;
-            payload.messages = 'Usuário inserido com sucesso';
+            payload.msg = 'Usuário inserido com sucesso';
 
             res.status(payload.code).json(payload);
         } catch (error) {
-            payload.message = error.message;
+            payload.msg = error.message;
             payload.success = false;
             res.status(payload.code).json(payload);
         }
@@ -95,7 +95,7 @@ module.exports = function (middlewares) {
     });
 
     router.get('/users/:userId', middlewares.verifyUserExistsMiddleware, async (req, res) => {
-        const payload = req.payload(['user']);
+        const payload = req.payload();
 
         try {
             payload.data.user = req.user;
@@ -108,23 +108,23 @@ module.exports = function (middlewares) {
     })
 
     router.put('/users/:userId', middlewares.verifyUserExistsMiddleware, async (req, res) => {
-        const payload = req.payload(['user']);
+        const payload = req.payload(['name']);
 
         try {
             const { userId } = req.params;
             const { name } = req.body;
 
             if (!name) {
-                payload.error = true;
+                payload.success = false;
                 payload.form.name.error = true;
                 payload.form.name.messages = 'Campo obrigatório';
             } else if (name.length < 3 || name.length > 255) {
-                payload.error = true;
+                payload.success = false;
                 payload.form.name.error = true;
                 payload.form.name.messages = 'O nome precisa ter de 3 a 255 caracteres';
             }
 
-            if (payload.error) {
+            if (!payload.success) {
                 payload.code = 400;
                 throw new Error('Verifique todos os campos');
             }
@@ -134,18 +134,18 @@ module.exports = function (middlewares) {
             })
 
             payload.data.user = user;
-            payload.messages = 'Usuário editado com sucesso';
+            payload.msg = 'Usuário editado com sucesso';
 
             res.status(payload.code).json(payload);
         } catch (error) {
-            payload.message = error.message;
             payload.success = false;
+            payload.msg = error.message;
             res.status(payload.code).json(payload);
         }
     })
 
     router.put('/users/:userId/active/:active', async (req, res) => {
-        const payload = req.payload(['user']);
+        const payload = req.payload(['active']);
 
         try {
             const { userId } = req.params;
@@ -162,16 +162,16 @@ module.exports = function (middlewares) {
             }
 
             if (typeof active === 'undefined') {
-                payload.error = true;
+                payload.success = false;
                 payload.form.active.error = true;
-                payload.form.active.messages = 'Campo obrigatório';
+                payload.form.active.msg = 'Campo obrigatório';
             } else if (active !== 0 && active !== 1) {
-                payload.error = true;
+                payload.success = false;
                 payload.form.active.error = true;
-                payload.form.active.messages = 'Este campo precisa ser "0" ou "1"';
+                payload.form.active.msg = 'Este campo precisa ser "0" ou "1"';
             }
 
-            if (payload.error) {
+            if (!payload.success) {
                 payload.code = 400;
                 throw new Error('Verifique todos os campos');
             }
@@ -181,12 +181,12 @@ module.exports = function (middlewares) {
             })
 
             payload.data.user = user;
-            payload.messages = 'Usuário editado com sucesso';
+            payload.msg = 'Usuário editado com sucesso';
 
             res.status(payload.code).json(payload);
         } catch (error) {
-            payload.message = error.message;
             payload.success = false;
+            payload.msg = error.message;
             res.status(payload.code).json(payload);
         }
     })
@@ -199,12 +199,12 @@ module.exports = function (middlewares) {
             await userRepo.deleteUser(userId);
 
             payload.code = 204;
-            
+
             res.status(payload.code).json(payload);
 
         } catch (error) {
-            payload.message = error.message;
             payload.success = false;
+            payload.msg = error.message;
             res.status(payload.code).json(payload);
         }
     })

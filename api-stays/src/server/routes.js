@@ -199,26 +199,32 @@ module.exports = function (middlewares) {
             const { newEntryTime } = req.body;
 
             if (!newEntryTime) {
-                payload.success = true;
+                payload.success = false;
                 payload.form.newEntryTime.error = true;
                 payload.form.newEntryTime.msg = 'Campo obrigatório';
             } else if (!timeStampValidator.isValidTimestamp(newEntryTime)) {
-                payload.success = true
+                payload.success = false;
                 payload.form.newEntryTime.error = true;
                 payload.form.newEntryTime.msg = 'Timestamp inválido';
+            } else if (timeStampValidator.isPastDate(newEntryTime)) {
+                payload.success = false;
+                payload.form.newEntryTime.error = true;
+                payload.form.newEntryTime.msg = 'Timestamp não pode ser anterior à 01/01/2021';
+            } else if (timeStampValidator.isFutureDate(newEntryTime)) {
+                payload.success = false
+                payload.form.newEntryTime.error = true;
+                payload.form.newEntryTime.msg = 'Timestamp não pode ser uma data no futuro';
             }
 
-
-            if (payload.success) {
+            if (!payload.success) {
                 payload.code = 400;
                 throw new Error('Verifique todos os campos');
             }
 
             const stay = await StayRepository.update(userId, openedStays[0]._id, newEntryTime);
+            payload.data.stay = stay;
 
             payload.msg = 'Estadia atualizada com sucesso';
-
-            payload.data.stay = stay;
 
             res.status(payload.code).json(payload);
         } catch (error) {

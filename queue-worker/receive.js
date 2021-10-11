@@ -32,11 +32,12 @@ amqp.connect('amqp://localhost', opt, function (error0, connection) {
       try {
         await axios.put(`${process.env.STAYS_API_HOST}stays/${userId}/confirmPayment/${stayId}/`, {}, {
           headers: {
-            Authorization: 'Basic YUBhOjEyMzQ1Ng=='
+            Authorization: 'Basic dXN1YXJpbzFAaHViZWVzLmNvbToxMjM0NTY='
           }
         })
       } catch (error) {
         console.log(error.message)
+        console.log(error.response ? error.response.data ? error.response.data : '' : '')
       }
 
 
