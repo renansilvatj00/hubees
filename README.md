@@ -86,4 +86,31 @@ A api de estadias possui as seguintes rotas:
 - `PUT /stays/:userId/pay` - Atualiza o status da estadia para "Pago mas não confirmado"
 - `PUT /stays/:userId/confirmPayment/:stayId` - Confirma o pagamento da estadia
 
+
 O Bot de confirmação de pagamento ficará ouvindo a fila de estadias com pagamento não confirmado. Sempre que chegar um item na fila, ele completa a transação e finaliza a estadia.
+
+
+## Realização de Testes
+
+Para realizar os testes, é necessário que todas as apis estejam desligadas e depois seguir os passos abaixo:
+
+### API de autenticação
+
+```sh
+cd api-auth/
+npm rum test
+```
+
+### API de usuários
+
+```sh
+cd api-users/
+npm rum test
+```
+
+### API de estadias
+
+```sh
+cd api-stays/
+npm rum test
+```
